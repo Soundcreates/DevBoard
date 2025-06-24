@@ -17,7 +17,7 @@ module.exports.registerController = async (req, res) => {
       password: hashedPassword,
       role: role || 'developer',
     })
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_KEY, { expiresIn: '1d' });
+    const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_KEY, { expiresIn: '1d' });
 
 
     return res.status(200).json({
@@ -45,7 +45,7 @@ module.exports.loginController = async (req, res) => {
 
     const isValidPassword = await bcrypt.compare(password, existingUser.password);
     if (!isValidPassword) return res.status(401).json({ message: "Invalid credentials, please try again later" });
-    const token = jwt.sign({ id: existingUser._id }, process.env.JWT_KEY, { expiresIn: '1d' });
+    const token = jwt.sign({ id: existingUser._id, role: newUser.role }, process.env.JWT_KEY, { expiresIn: '1d' });
 
     return res.status(200).json({
       message: "User logged in successfully", token, user: {
