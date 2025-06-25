@@ -4,6 +4,8 @@ function defineAbilitiesFor(role, userId = null) {
   if (role === 'admin') {
     can('manage', 'all');
     can('delete', 'Project');
+    cannot('assign', 'Task');
+    cannot('create', 'Task');
   } else if (role === 'pm') {
     can('create', 'Project');
     can('read', 'Project');
@@ -12,6 +14,7 @@ function defineAbilitiesFor(role, userId = null) {
     can('update', 'Task');
     can('read', 'User');
     can('update', 'Team');
+    can('assign', 'Task');
   } else if (role === 'developer') {
     can('read', 'Task');
     can('update', 'Task', { assignedTo: userId });

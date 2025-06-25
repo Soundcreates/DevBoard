@@ -7,7 +7,7 @@ const { getUsers, getOneUser, updateUser, deleteUser } = require('../controllers
 
 userRoutes.get('/getUsers', authMiddleware, checkPermission('read', 'User'), getUsers);
 
-userRoutes.get('/getUser/:userId', authMiddleware, checkPermisison('read', 'User'), getOneUser);
+userRoutes.get('/getUser/:userId', authMiddleware, checkPermission('read', 'User'), getOneUser);
 
 userRoutes.put('/getUser/:userId', authMiddleware, checkPermission('update', 'User'), updateUser);
 

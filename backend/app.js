@@ -3,6 +3,8 @@ const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 const connectDB = require('./config/connectDB');
 
 dotenv.config();
@@ -15,6 +17,8 @@ app.use(cors({
 connectDB();
 
 app.use('/api/auth', authRoutes);
+app.use('/api/project', projectRoutes);
+app.use('/api/task', taskRoutes)
 
 app.listen(process.env.PORT, () => {
   console.log("conected to port: ", process.env.PORT);
