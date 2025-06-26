@@ -2,10 +2,10 @@ const express = require('express');
 const projectRoutes = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
 const checkPermission = require('../middleware/checkPermission');
-const { addProject, getProjects, getSpecificProject, updateProject, deleteProject, updateTeam } =
+const { addProject, getProjects, getSpecificProject, updateProject, deleteProject, updateTeam } = require('../controllers/projectController');
 
 
-  projectRoutes.post('/addProjects', authMiddleware, checkPermission('create', 'Project'), addProject);
+projectRoutes.post('/addProjects', authMiddleware, checkPermission('create', 'Project'), addProject);
 
 projectRoutes.get('/getProjects', authMiddleware, checkPermission('read', 'Project'), getProjects);
 
