@@ -30,6 +30,10 @@ const Dashboard = () => {
     navigate("/profile");
   };
 
+  const handleNavigateProjects = () => {
+    navigate("/projects");
+  };
+
   return (
     <div
       className={`min-h-screen ${
@@ -83,17 +87,13 @@ const Dashboard = () => {
               color: "bg-blue-500/20",
               function: handleNavigateProfile,
             },
-            {
-              icon: ClipboardListIcon,
-              title: "Tasks",
-              desc: "Manage and track your assigned tasks with ease.",
-              color: "bg-green-500/20",
-            },
+
             {
               icon: FolderIcon,
               title: "Projects",
               desc: "Explore and collaborate on your projects.",
               color: "bg-yellow-500/20",
+              function: handleNavigateProjects,
             },
             {
               icon: LogOutIcon,
