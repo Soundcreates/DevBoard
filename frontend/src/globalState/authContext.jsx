@@ -1,9 +1,11 @@
 import react, { useState, useEffect, useContext, createContext } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,12 +27,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("token");
+    navigate("/");
+  };
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, fetchUser }}>
+    <AuthContext.Provider value={{ user, isLoading, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );

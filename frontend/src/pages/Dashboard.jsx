@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import SideBarMain from "../components/SideBar";
 import {
   UserCircleIcon,
   ClipboardListIcon,
@@ -8,13 +9,25 @@ import {
   SunIcon,
   MoonIcon,
 } from "lucide-react";
+import { useAuth } from "../globalState/authContext";
+import { useNavigate } from "react-router";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const { handleLogout } = useAuth();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle("dark");
+  };
+
+  const handleClickLogout = () => {
+    handleLogout();
+  };
+
+  const handleNavigateProfile = () => {
+    navigate("/profile");
   };
 
   return (
@@ -25,33 +38,8 @@ const Dashboard = () => {
           : "bg-gradient-to-br from-purple-500 via-pink-500 to-red-500"
       } transition-colors duration-300`}
     >
-      {/* Sidebar */}
-      <motion.aside
-        initial={{ x: -250 }}
-        animate={{ x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="fixed top-0 left-0 h-full w-64 bg-white/10 dark:bg-gray-800/80 backdrop-blur-lg p-6 shadow-xl border-r border-white/20"
-      >
-        <h2 className="text-2xl font-bold text-white mb-8">Dashboard</h2>
-        <nav className="space-y-4">
-          {[
-            { icon: UserCircleIcon, label: "Profile" },
-            { icon: ClipboardListIcon, label: "Tasks" },
-            { icon: FolderIcon, label: "Projects" },
-            { icon: LogOutIcon, label: "Logout" },
-          ].map((item, index) => (
-            <motion.a
-              key={index}
-              href="#"
-              whileHover={{ scale: 1.1, x: 10 }}
-              className="flex items-center text-white/80 hover:text-white transition-colors"
-            >
-              <item.icon className="w-6 h-6 mr-3" />
-              <span>{item.label}</span>
-            </motion.a>
-          ))}
-        </nav>
-      </motion.aside>
+      {/* ✅ Use your animated Sidebar component */}
+      <SideBarMain />
 
       {/* Main Content */}
       <div className="ml-64 p-8">
@@ -65,6 +53,7 @@ const Dashboard = () => {
           >
             Welcome to Your Dashboard
           </motion.h1>
+
           <div className="flex items-center space-x-4">
             <motion.div whileHover={{ scale: 1.1 }} className="text-white/80">
               <UserCircleIcon className="w-8 h-8" />
@@ -92,6 +81,7 @@ const Dashboard = () => {
               title: "Your Profile",
               desc: "View and edit your account details, preferences, and settings.",
               color: "bg-blue-500/20",
+              function: handleNavigateProfile,
             },
             {
               icon: ClipboardListIcon,
@@ -110,6 +100,7 @@ const Dashboard = () => {
               title: "Logout",
               desc: "Safely log out from your account.",
               color: "bg-red-500/20",
+              function: handleClickLogout,
             },
           ].map((card, index) => (
             <motion.div
@@ -130,6 +121,7 @@ const Dashboard = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="mt-4 px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
+                onClick={card.function}
               >
                 Go to {card.title}
               </motion.button>

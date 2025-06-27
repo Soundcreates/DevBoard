@@ -4,7 +4,18 @@ import { motion } from "framer-motion";
 import { useAuth } from "../globalState/authContext";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+
+  if (isLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
+        <p className="text-white text-lg animate-pulse">
+          Loading your profile...
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 space-y-8 animate-background">
       <motion.div
