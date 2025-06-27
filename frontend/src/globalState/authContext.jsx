@@ -1,4 +1,4 @@
-import react, { useState, useContext, createContext } from "react";
+import react, { useState, useEffect, useContext, createContext } from "react";
 import axios from "axios";
 
 export const AuthContext = createContext();
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api.auth.getMe", {
+      const response = await axios.get("http://localhost:3000/api/auth/getMe", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -24,11 +24,19 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-  fetchUser();
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, isLoading, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  return context;
 };

@@ -28,21 +28,14 @@ const Login = () => {
       console.log("Login attempted with:", { email, password });
       const response = await api.post("/api/auth/login", formData);
       localStorage.setItem("token", response.data.token);
-
-      if (response.status === 200) {
-        navigate("/dashboard");
-        console.log("User logged in successfully");
-        console.log(response.data.token);
-      } else if (response.status === 400) {
-        setError(response.data.message);
-      } else if (response.status === 401) {
-        setError(response.data.message);
-      } else if (response.status === 500) {
-        setError(response.data.message);
-      }
+      navigate("/dashboard");
     } catch (err) {
       console.error("Login failed:", err);
-      setError("Login failed, please try again later.");
+      if (err.response) {
+        setError(err.response.data.message);
+      } else {
+        setError("Something went wrong, please try again later.");
+      }
     }
   };
 
