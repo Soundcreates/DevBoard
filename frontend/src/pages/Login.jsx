@@ -1,21 +1,49 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { SunIcon, MoonIcon } from "lucide-react";
+import api from "../services/api";
+
+import axios from "axios";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle("dark");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const { email, password } = formData;
     e.preventDefault();
     // Handle login logic here
-    console.log("Login attempted with:", { email, password });
+    try {
+      console.log("Login attempted with:", { email, password });
+      const response = await api.post("/api/auth/login", formData);
+      localStorage.setItem("token", response.data.token);
+
+      if (response.status === 200) {
+        navigate("/dashboard");
+        console.log("User logged in successfully");
+        console.log(response.data.token);
+      } else if (response.status === 400) {
+        setError(response.data.message);
+      } else if (response.status === 401) {
+        setError(response.data.message);
+      } else if (response.status === 500) {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      console.error("Login failed:", err);
+      setError("Login failed, please try again later.");
+    }
   };
 
   return (
@@ -60,8 +88,10 @@ const Login = () => {
             whileFocus={{ scale: 1.02 }}
             type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, email: e.target.value }))
+            }
             className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
             placeholder="Enter your email"
             aria-required="true"
@@ -80,8 +110,10 @@ const Login = () => {
             whileFocus={{ scale: 1.02 }}
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, password: e.target.value }))
+            }
             className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
             placeholder="Enter your password"
             aria-required="true"
@@ -90,12 +122,6 @@ const Login = () => {
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <a
-            href="#"
-            className="text-white/80 hover:text-white text-sm transition"
-          >
-            Forgot Password?
-          </a>
           <a
             href="/register"
             className="text-white/80 hover:text-white text-sm transition"
@@ -113,6 +139,9 @@ const Login = () => {
         >
           Login
         </motion.button>
+        <div className=" text-center">
+          <p className="italic text-blue-500">{error}</p>
+        </div>
       </motion.div>
     </div>
   );

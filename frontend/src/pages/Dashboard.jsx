@@ -1,4 +1,4 @@
-import React from "React";
+import React from "react";
 import { motion } from "framer-motion";
 import {
   UserCircleIcon,

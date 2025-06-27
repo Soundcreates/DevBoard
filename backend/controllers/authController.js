@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel.js');
 
 module.exports.registerController = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, confirmedPassword, role } = req.body;
   try {
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
@@ -11,6 +11,7 @@ module.exports.registerController = async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    if (password !== confirmedPassword) return res.status(404).json({ message: "Passwords don't match" });
     const newUser = await userModel.create({
       name,
       email,

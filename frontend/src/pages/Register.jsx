@@ -1,28 +1,49 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { SunIcon, MoonIcon } from "lucide-react";
+import api from "../services/api";
+import { useNavigate } from "react-router";
 
 const Register = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmedPassword: "",
+    role: "",
+  });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle("dark");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle registration logic here
-    console.log("Registration attempted with:", {
-      name,
-      email,
-      password,
-      confirmPassword,
-    });
+    console.log(formData);
+    try {
+      const response = await api.post("/api/auth/register", formData);
+      localStorage.setItem("token", response.data.token);
+      if (response.status === 200) {
+        console.log("User registered successfully");
+        console.log(response.data.token);
+
+        // Redirect to login or dashboard
+        setError(response.data.message);
+        navigate("/dashboard");
+      } else if (response.status === 400) {
+        setError(response.data.message);
+      } else if (response.status === 404) {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      console.log(err.message);
+      setError("Registration failed, please try again later.");
+    }
   };
 
   return (
@@ -67,8 +88,13 @@ const Register = () => {
             whileFocus={{ scale: 1.02 }}
             type="text"
             id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.name}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                name: e.target.value,
+              }))
+            }
             className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
             placeholder="Enter your name"
             aria-required="true"
@@ -84,13 +110,44 @@ const Register = () => {
             whileFocus={{ scale: 1.02 }}
             type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, email: e.target.value }))
+            }
             className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
             placeholder="Enter your email"
             aria-required="true"
             autoComplete="email"
           />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="role" className="text-white block mb-1 font-medium">
+            Role
+          </label>
+          <motion.select
+            whileFocus={{ scale: 1.02 }}
+            id="role"
+            value={formData.role}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, role: e.target.value }))
+            }
+            className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
+            aria-required="true"
+          >
+            <option value="" disabled className="text-white/80 bg-gray-700">
+              Select your role
+            </option>
+            <option value="admin" className="text-white bg-gray-700">
+              Admin
+            </option>
+            <option value="pm" className="text-white bg-gray-700">
+              PM
+            </option>
+            <option value="developer" className="text-white bg-gray-700">
+              Developer
+            </option>
+          </motion.select>
         </div>
 
         <div className="mb-4">
@@ -104,8 +161,13 @@ const Register = () => {
             whileFocus={{ scale: 1.02 }}
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                password: e.target.value,
+              }))
+            }
             className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
             placeholder="Create a password"
             aria-required="true"
@@ -124,10 +186,14 @@ const Register = () => {
             whileFocus={{ scale: 1.02 }}
             type="password"
             id="confirm-password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/기술
-/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
+            value={formData.confirmedPassword}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                confirmedPassword: e.target.value,
+              }))
+            }
+            className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
             placeholder="Confirm your password"
             aria-required="true"
             autoComplete="new-password"
@@ -152,6 +218,9 @@ const Register = () => {
         >
           Register
         </motion.button>
+        <div className="mb-2 text-center">
+          <p className="italic text-blue-500">{error}</p>
+        </div>
       </motion.div>
     </div>
   );
