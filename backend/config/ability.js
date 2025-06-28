@@ -15,6 +15,7 @@ function defineAbilitiesFor(role, userId = null) {
     can('read', 'User');
     can('update', 'Team');
     can('assign', 'Task');
+    can('read', 'Developers');
   } else if (role === 'developer') {
     can('read', 'Task');
     can('update', 'Task', { assignedTo: userId });

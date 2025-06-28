@@ -14,7 +14,7 @@ import { useNavigate } from "react-router";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { handleLogout } = useAuth();
+  const { handleLogout, user } = useAuth(); // ✅ get user from auth context
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
@@ -34,6 +34,37 @@ const Dashboard = () => {
     navigate("/projects");
   };
 
+  const cards = [
+    {
+      icon: UserCircleIcon,
+      title: "Your Profile",
+      desc: "View and edit your account details, preferences, and settings.",
+      color: "bg-blue-500/20",
+      function: handleNavigateProfile,
+    },
+    {
+      icon: FolderIcon,
+      title: "Projects",
+      desc: "Explore and collaborate on your projects.",
+      color: "bg-yellow-500/20",
+      function: handleNavigateProjects,
+    },
+    {
+      icon: LogOutIcon,
+      title: "Logout",
+      desc: "Safely log out from your account.",
+      color: "bg-red-500/20",
+      function: handleClickLogout,
+    },
+    (user?.role === "pm" || user?.role === "admin") && {
+      icon: ClipboardListIcon,
+      title: "Add Project",
+      desc: "Add a new project and assign tasks and team members.",
+      color: "bg-green-500/20",
+      function: () => navigate("/add-project"),
+    },
+  ].filter(Boolean); // ✅ remove false if condition fails
+
   return (
     <div
       className={`min-h-screen ${
@@ -42,7 +73,6 @@ const Dashboard = () => {
           : "bg-gradient-to-br from-purple-500 via-pink-500 to-red-500"
       } transition-colors duration-300`}
     >
-      {/* ✅ Use your animated Sidebar component */}
       <SideBarMain />
 
       {/* Main Content */}
@@ -55,11 +85,15 @@ const Dashboard = () => {
             transition={{ duration: 0.6 }}
             className="text-3xl font-bold text-white"
           >
-            Welcome to Your Dashboard
+            Welcome to Your Dashboard {user?.name ? user.name : ""}
           </motion.h1>
 
           <div className="flex items-center space-x-4">
-            <motion.div whileHover={{ scale: 1.1 }} className="text-white/80">
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              className="text-white/80"
+              onClick={handleNavigateProfile}
+            >
               <UserCircleIcon className="w-8 h-8" />
             </motion.div>
             <motion.button
@@ -79,30 +113,7 @@ const Dashboard = () => {
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            {
-              icon: UserCircleIcon,
-              title: "Your Profile",
-              desc: "View and edit your account details, preferences, and settings.",
-              color: "bg-blue-500/20",
-              function: handleNavigateProfile,
-            },
-
-            {
-              icon: FolderIcon,
-              title: "Projects",
-              desc: "Explore and collaborate on your projects.",
-              color: "bg-yellow-500/20",
-              function: handleNavigateProjects,
-            },
-            {
-              icon: LogOutIcon,
-              title: "Logout",
-              desc: "Safely log out from your account.",
-              color: "bg-red-500/20",
-              function: handleClickLogout,
-            },
-          ].map((card, index) => (
+          {cards.map((card, index) => (
             <motion.div
               key={index}
               whileHover={{ scale: 1.05, y: -5 }}

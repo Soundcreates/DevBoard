@@ -62,7 +62,9 @@ const ProjectsPage = () => {
           ))
         ) : (
           <p className="text-white text-lg">
-            No projects found. Start by creating one!
+            {user?.role === "admin" || user?.role === "pm"
+              ? "No projects found. Start by creating one!"
+              : "You have no projects assigned."}
           </p>
         )}
       </div>

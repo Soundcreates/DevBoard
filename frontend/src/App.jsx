@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import Tasks from "./pages/Tasks";
 import Projects from "./pages/Projects";
 import { AuthProvider } from "./globalState/authContext";
+import AddProject from "./pages/AddProject";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/add-project" element={<AddProject />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

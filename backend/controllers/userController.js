@@ -68,3 +68,24 @@ module.exports.deleteUser = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+
+module.exports.fetchDevelopers = async (req, res) => {
+  try {
+    const developers = await userModel.find({ role: "developer" });
+
+    const formattedDevelopers = developers.map(dev => ({
+      id: dev._id,
+      name: dev.name,
+      email: dev.email,
+      profilePic: dev.avatar || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" // Default avatar if none provided
+
+    }))
+    return res.status(200).json({
+      developers: formattedDevelopers
+    });
+
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Internal server error, please try again later" });
+  }
+}

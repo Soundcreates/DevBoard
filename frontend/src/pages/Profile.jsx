@@ -2,8 +2,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../globalState/authContext";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const { user, isLoading } = useAuth();
 
   if (isLoading || !user) {
@@ -30,7 +32,10 @@ const Profile = () => {
             alt="Profile"
             className="rounded-full w-24 h-24 border-4 border-white/30"
           />
-          <h1 className="text-white text-4xl font-bold">{user.name}</h1>
+          <div className="flex flex-col">
+            <h1 className="text-white text-4xl font-bold">{user.name}</h1>
+            <p className="italic text-stone-200 text-lg">{user.role}</p>
+          </div>
         </div>
 
         <div className="mt-6 text-white text-lg flex space-x-6">
