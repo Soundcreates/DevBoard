@@ -1,8 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FolderIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const ProjectCard = ({ project, onView }) => {
+  const navigate = useNavigate();
+  const handleViewProject = () => {
+    navigate(`/view-project/${project._id}`);
+  };
   return (
     <motion.div
       whileHover={{ scale: 1.05, y: -5 }}
@@ -22,7 +27,7 @@ const ProjectCard = ({ project, onView }) => {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => onView(project)}
+        onClick={handleViewProject}
         className="mt-4 px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition"
       >
         View Project

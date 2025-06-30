@@ -5,22 +5,28 @@ import api from "../services/api";
 export const ProjectContext = createContext();
 
 export const ProjectProvider = ({ children }) => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
 
-  const fetchProjects = async () =>{
-    try{
-      const response = await api.get('/api/projects/getProjects');
-      
-      const projects = response.data.projects;
-      setProjects(projects);
-      
-      
+  const fetchProject = async (projectId) => {
+    try {
+      const response = await api.get(`/api/project/getProjects/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const project = response.data.project;
+      setProjects(project);
+    } catch (err) {
+      console.log(err.message);
     }
-  }
+  };
   return (
-    <ProjectContext.Provider value={{projects, isLoading}}>{children}</ProjectContext.Provider>
+    <ProjectContext.Provider value={{ projects, isLoading, fetchProject }}>
+      {children}
+    </ProjectContext.Provider>
   );
 };
 

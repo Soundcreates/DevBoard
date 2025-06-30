@@ -3,11 +3,35 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../globalState/authContext";
 import { useNavigate } from "react-router";
+import { useProject } from "../globalState/projectContext";
+import { useState, useEffect } from "react";
+import api from "../services/api";
+import ProjectCard from "../components/ProjectCard";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user, isLoading } = useAuth();
+  const [getProjects, setGetProjects] = useState([]);
+  const [project, setProject] = useState(true);
+  const [tasks, setTasks] = useState(false);
 
+  const fetchProjects = async () => {
+    try {
+      const response = await api.get("/api/project/getProjects", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setGetProjects(response.data.projects);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      setGetProjects([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
   if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
@@ -46,18 +70,37 @@ const Profile = () => {
         <div className="mt-4 flex space-x-4">
           <motion.button
             whileTap={{ scale: 0.95 }}
-            className="bg-white/20 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/30 transition"
+            className={`bg-white/20 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/30 transition ${
+              project && "bg-white/30"
+            }`}
+            onClick={() => {
+              setTasks(false);
+              setProject((prev) => !prev);
+            }}
           >
             View Projects
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.95 }}
-            className="bg-white/20 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/30 transition"
+            className={`bg-white/20 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/30 transition ${
+              tasks && "bg-white/30"
+            }`}
+            onClick={() => {
+              setProject(false);
+              setTasks(true);
+            }}
           >
             View Tasks
           </motion.button>
         </div>
       </motion.div>
+      {project && (
+        <div className="w-full  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+          {getProjects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -8,20 +8,26 @@ import Tasks from "./pages/Tasks";
 import Projects from "./pages/Projects";
 import { AuthProvider } from "./globalState/authContext";
 import AddProject from "./pages/AddProject";
+import ProjectsPage from "./pages/ViewProject";
+import ViewProject from "./pages/ViewProject";
+import { ProjectProvider } from "./globalState/projectContext";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/add-project" element={<AddProject />} />
-        </Routes>
+        <ProjectProvider>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/add-project" element={<AddProject />} />
+            <Route path="/view-project/:projectId" element={<ViewProject />} />
+          </Routes>
+        </ProjectProvider>
       </AuthProvider>
     </BrowserRouter>
   );
