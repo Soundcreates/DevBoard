@@ -4,7 +4,7 @@ const taskModel = require('../models/taskModel');
 
 
 module.exports.createTask = async (req, res) => {
-  const { title, description, assignedTo, project } = req.body;
+  const { title, description, assignedTo, project, dueDate } = req.body;
 
   try {
     if (!req.user || req.user.role !== 'pm') {
@@ -27,6 +27,7 @@ module.exports.createTask = async (req, res) => {
       assignedTo,
       project,
       createdBy: req.user.id,
+      dueDate,
     });
 
     const populatedTask = await taskModel.findById(task._id)
