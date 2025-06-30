@@ -1,6 +1,7 @@
 const { AbilityBuilder, Ability } = require('@casl/ability');
 
 function defineAbilitiesFor(role, userId = null) {
+  const { can, cannot, build } = new AbilityBuilder(Ability);
   if (role === 'admin') {
     can('manage', 'all');
     can('delete', 'Project');

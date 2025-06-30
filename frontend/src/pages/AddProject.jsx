@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../globalState/authContext";
 import ProfileCard from "../components/ProfileCard";
-
+import { useNavigate } from "react-router";
 import api from "../services/api";
 
 const AddProject = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [devs, setDevs] = useState([]);
   const [selectedDevs, setSelectedDevs] = useState([]);
-
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
   useEffect(() => {
     const fetchDevelopers = async () => {
       try {
@@ -34,6 +37,39 @@ const AddProject = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!title || !description) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const response = await api.post(
+        "/api/project/addProjects",
+        {
+          title: title,
+          description: description,
+          teamMembers: selectedDevs.map((dev) => dev.id),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setError(response.data.message);
+      console.log(response.data.message);
+      setTitle("");
+      setDescription("");
+      setSelectedDevs([]);
+      navigate("/dashboard");
+    } catch (err) {
+      console.log(err.message);
+      setError("Failed to create project");
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       {/* Left Section */}
@@ -41,12 +77,18 @@ const AddProject = () => {
         <h1 className="text-4xl font-bold mb-8">
           Hey {user?.name}, let's create a project
         </h1>
+        <p className="italic text-left mb-5">{error}</p>
 
-        <form className="flex flex-col space-y-6 max-w-xl">
+        <form
+          className="flex flex-col space-y-6 max-w-xl"
+          onSubmit={handleSubmit}
+        >
           <div className="flex flex-col">
             <label className="mb-2 text-lg font-medium">Project Title</label>
             <input
               type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter project title"
               className="p-3 rounded-lg bg-white/20 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-white"
             />
@@ -58,6 +100,8 @@ const AddProject = () => {
             </label>
             <textarea
               placeholder="Enter project description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               rows="5"
               className="p-3 rounded-lg bg-white/20 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-white"
             ></textarea>

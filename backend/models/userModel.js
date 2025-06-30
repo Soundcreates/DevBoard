@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
     enum: ['admin', 'pm', 'developer'],
     default: 'developer'
   },
-  avatar: String,
+  profilePic: String,
   createdAt: {
     type: Date,
     default: Date.now(),

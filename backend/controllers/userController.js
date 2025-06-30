@@ -71,13 +71,13 @@ module.exports.deleteUser = async (req, res) => {
 
 module.exports.fetchDevelopers = async (req, res) => {
   try {
-    const developers = await userModel.find({ role: "developer" });
+    const developers = await userModel.find({ role: "developer" }).select("name profilePic _id");
 
     const formattedDevelopers = developers.map(dev => ({
       id: dev._id,
       name: dev.name,
       email: dev.email,
-      profilePic: dev.avatar || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" // Default avatar if none provided
+      profilePic: dev.profilePic || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" // Default avatar if none provided
 
     }))
     return res.status(200).json({

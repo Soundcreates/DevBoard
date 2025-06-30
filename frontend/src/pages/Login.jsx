@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { SunIcon, MoonIcon } from "lucide-react";
 import api from "../services/api";
-
+import { useAuth } from "../globalState/authContext";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
 const Login = () => {
+  const { setUser } = useAuth();
+
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,6 +30,7 @@ const Login = () => {
       console.log("Login attempted with:", { email, password });
       const response = await api.post("/api/auth/login", formData);
       localStorage.setItem("token", response.data.token);
+      setUser(response.data.user);
       navigate("/dashboard");
     } catch (err) {
       console.error("Login failed:", err);

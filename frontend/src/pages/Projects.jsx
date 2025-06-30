@@ -11,7 +11,11 @@ const ProjectsPage = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await api.get("/api/project");
+        const response = await api.get("/api/project/getProjects", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setProjects(response.data.projects || []);
       } catch (err) {
         console.error("Failed to fetch projects:", err);
