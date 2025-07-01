@@ -14,7 +14,20 @@ const Profile = () => {
   const [getProjects, setGetProjects] = useState([]);
   const [project, setProject] = useState(true);
   const [tasks, setTasks] = useState(false);
+  const [countTasks, setCountTasks] = useState([]);
 
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get("/api/task/fetchTasksToUser", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setCountTasks(response.data.tasks);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
   const fetchProjects = async () => {
     try {
       const response = await api.get("/api/project/getProjects", {
@@ -63,8 +76,8 @@ const Profile = () => {
         </div>
 
         <div className="mt-6 text-white text-lg flex space-x-6">
-          <p>Projects: 0</p>
-          <p>Tasks: 0</p>
+          <p>Projects: {getProjects.length}</p>
+          <p>Tasks: {countTasks.length} </p>
         </div>
 
         <div className="mt-4 flex space-x-4">
@@ -92,13 +105,32 @@ const Profile = () => {
           >
             View Tasks
           </motion.button>
+          <div className="bg-white/30 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/40 transition-all cursor-pointer duration-300"
+          onClick = {() => navigate('/profile-setting')}>
+            Edit Profile
+          </div>
         </div>
       </motion.div>
       {project && (
         <div className="w-full  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-          {getProjects.map((project) => (
-            <ProjectCard project={project} />
-          ))}
+          {getProjects.length === 0 ? (
+            <p className="text-xl italic text-white">
+              You have no projects right now
+            </p>
+          ) : (
+            getProjects.map((project) => (
+              <ProjectCard key={project._id} project={project} />
+            ))
+          )}
+        </div>
+      )}
+      {tasks && (
+        <div clasName="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+          {countTasks.length === 0 ? (
+            <p className="text-xl italic text-white ">
+              No tasks has been assigned to you
+            </p>
+          ) : null}
         </div>
       )}
     </div>

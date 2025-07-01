@@ -1,31 +1,77 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { XIcon } from "lucide-react";
+import api from "../services/api";
+import { useAuth } from "../globalState/authContext";
 
-const AddTaskModal = ({ isOpen, onClose, onSubmit, developers }) => {
+const AddTaskModal = ({ isOpen, onClose, developers, projectId }) => {
+  console.log(projectId);
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     dueDate: "",
     assignedTo: "",
+    project: projectId,
+    createdBy: user?._id || "An User",
   });
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post(
+        "/api/task/createTask",
+        {
+          title: formData.title,
+          description: formData.description,
+          assignedTo: formData.assignedTo,
+          project: formData.project,
+          dueDate: formData.dueDate,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      setError("Task added successfully!");
+      setFormData({
+        title: "",
+        description: "",
+        dueDate: "",
+        assignedTo: "",
+      });
+      onClose();
+    } catch (err) {
+      console.log(err.message);
+      setError("Failed to add task, please try again.");
+      setFormData({
+        title: "",
+        description: "",
+        dueDate: "",
+        assignedTo: "",
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-    onClose();
-    setFormData({
-      title: "",
-      description: "",
-      dueDate: "",
-      assignedTo: "",
-    });
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   onSubmit(formData);
+  //   onClose();
+  //   setFormData({
+  //     title: "",
+  //     description: "",
+  //     dueDate: "",
+  //     assignedTo: "",
+  //   });
+  // };
 
   if (!isOpen) return null;
 
@@ -96,7 +142,7 @@ const AddTaskModal = ({ isOpen, onClose, onSubmit, developers }) => {
               name="assignedTo"
               value={formData.assignedTo}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-xl bg-white/20 border border-white/20 text-white focus:outline-none"
+              className="w-full px-4 py-2 rounded-xl bg-white/20 border border-white/20 text-black focus:outline-none"
               required
             >
               <option value="" disabled>
@@ -119,6 +165,9 @@ const AddTaskModal = ({ isOpen, onClose, onSubmit, developers }) => {
             Add Task
           </motion.button>
         </form>
+        <div className="w-full flex justify-center text-lg mt-2 ">
+          <p className="italic text-red-800 font-bold">{error}</p>
+        </div>
       </motion.div>
     </motion.div>
   );

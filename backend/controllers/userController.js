@@ -1,5 +1,26 @@
 const userModel = require('../models/userModel.js');
 
+
+
+module.exports.uploadProfilePicture = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await userModel.findById(userId);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.profilePic = req.file.path;
+    await user.save();
+
+    return res.status(200).json({ message: "Profile picture uploaded successfully", profilePic: user.profilePic });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Internal server error , please try again later" });
+
+  }
+}
+
+
 module.exports.getUsers = async (req, res) => {
   try {
     const users = await userModel.find();

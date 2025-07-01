@@ -2,10 +2,24 @@ const projectModel = require('../models/projectModel');
 const userModel = require('../models/userModel');
 const taskModel = require('../models/taskModel');
 
+module.exports.fetchTasksToUser = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const tasks = await taskModel.find({ assignedTo: userId }).populate('assignedTo', 'name role').populate('createdBy', 'name role').populate('project', 'title');
 
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ message: "No tasks found for this user" });
+    }
+
+    return res.status(200).json({ tasks: tasks });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ message: "Internal server error, please try again later" });
+  }
+}
 module.exports.createTask = async (req, res) => {
   const { title, description, assignedTo, project, dueDate } = req.body;
-
+  console.log(req.body);
   try {
     if (!req.user || req.user.role !== 'pm') {
       return res.status(403).json({ message: "Access denied, only Pms can create a task" });

@@ -12,6 +12,7 @@ import ProjectsPage from "./pages/ViewProject";
 import ViewProject from "./pages/ViewProject";
 import { ProjectProvider } from "./globalState/projectContext";
 import ProtectedRoutes from "./globalState/ProtectedRoutes";
+import ProfileSettings from "./pages/ProfileSetting";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
                 path="/view-project/:projectId"
                 element={<ViewProject />}
               />
+              <Route path="/profile-setting" element={<ProfileSettings />} />
             </Route>
           </Routes>
         </ProjectProvider>

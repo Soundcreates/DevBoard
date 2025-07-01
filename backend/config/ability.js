@@ -21,6 +21,7 @@ function defineAbilitiesFor(role, userId = null) {
     can('read', 'Task');
     can('update', 'Task', { assignedTo: userId });
     can('read', 'Project');
+    can('read', 'Task');
   }
 
   return build();

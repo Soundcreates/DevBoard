@@ -12,8 +12,6 @@ const ViewProject = () => {
   const { projectId } = useParams();
   const [modal, setModal] = useState(false);
 
-  async function handleAddTask(newTask) {}
-
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -25,6 +23,7 @@ const ViewProject = () => {
             },
           }
         );
+        console.log(response.data.project);
         setProject(response.data.project);
       } catch (err) {
         console.log(err.message);
@@ -69,17 +68,19 @@ const ViewProject = () => {
                   {project.title}
                 </h2>
                 <p className="text-white/80 mt-1">{project.description}</p>
-                <div
-                  className="bg-blue-500 text-white text-center w-[70px] py-2 rounded-lg mt-4 cursor-pointer hover:bg-blue-700 transition-all duration-300"
-                  onClick={() => setModal(true)}
-                >
-                  Add Task
-                </div>
+                {(user?.role === "admin" || user?.role === "pm") && (
+                  <div
+                    className="bg-blue-500 text-white text-center w-[70px] py-2 rounded-lg mt-4 cursor-pointer hover:bg-blue-700 transition-all duration-300"
+                    onClick={() => setModal(true)}
+                  >
+                    Add Task
+                  </div>
+                )}
                 {modal && (
                   <AddTaskModal
                     isOpen={modal}
                     onClose={() => setModal(false)}
-                    onSubmit={handleAddTask}
+                    projectId={project._id}
                     developers={project.teamMembers || []}
                   />
                 )}
