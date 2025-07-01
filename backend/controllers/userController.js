@@ -8,18 +8,17 @@ module.exports.uploadProfilePicture = async (req, res) => {
     const user = await userModel.findById(userId);
 
     if (!user) return res.status(404).json({ message: "User not found" });
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
     user.profilePic = req.file.path;
     await user.save();
 
     return res.status(200).json({ message: "Profile picture uploaded successfully", profilePic: user.profilePic });
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
     return res.status(500).json({ message: "Internal server error , please try again later" });
-
   }
 }
-
 
 module.exports.getUsers = async (req, res) => {
   try {

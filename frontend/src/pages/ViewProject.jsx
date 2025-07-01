@@ -39,7 +39,7 @@ const ViewProject = () => {
         {/* Header */}
         <div className="flex items-center space-x-4">
           <img
-            src="https://via.placeholder.com/80"
+            src={user?.profilePic}
             alt="Profile"
             className="rounded-full w-20 h-20 border-4 border-white/30"
           />

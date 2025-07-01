@@ -65,7 +65,7 @@ const Profile = () => {
       >
         <div className="flex items-center space-x-6">
           <img
-            src="https://via.placeholder.com/100"
+            src={user?.profilePic}
             alt="Profile"
             className="rounded-full w-24 h-24 border-4 border-white/30"
           />
@@ -105,8 +105,10 @@ const Profile = () => {
           >
             View Tasks
           </motion.button>
-          <div className="bg-white/30 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/40 transition-all cursor-pointer duration-300"
-          onClick = {() => navigate('/profile-setting')}>
+          <div
+            className="bg-white/30 text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/40 transition-all cursor-pointer duration-300"
+            onClick={() => navigate("/profile-setting")}
+          >
             Edit Profile
           </div>
         </div>

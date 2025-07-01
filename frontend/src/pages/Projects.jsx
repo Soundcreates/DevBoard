@@ -43,7 +43,7 @@ const ProjectsPage = () => {
         className="flex flex-col items-center"
       >
         <img
-          src="https://via.placeholder.com/120"
+          src={user?.profilePic}
           alt="Profile"
           className="rounded-full w-28 h-28 border-4 border-white/30 shadow-lg"
         />

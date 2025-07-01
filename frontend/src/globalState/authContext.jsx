@@ -1,6 +1,7 @@
 import react, { useState, useEffect, useContext, createContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import api from "../services/api";
 
 export const AuthContext = createContext();
 
@@ -11,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/auth/getMe", {
+      const response = await api.get("/api/auth/getMe", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -37,7 +38,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, handleLogout, setUser }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, handleLogout, setUser, fetchUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
