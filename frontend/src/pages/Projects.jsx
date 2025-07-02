@@ -3,25 +3,26 @@ import { motion } from "framer-motion";
 import { useAuth } from "../globalState/authContext";
 import ProjectCard from "../components/ProjectCard";
 import api from "../services/api";
+import { Navigate } from "react-router";
 
 const ProjectsPage = () => {
   const { user, isLoading } = useAuth();
   const [projects, setProjects] = useState([]);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await api.get("/api/project/getProjects", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setProjects(response.data.projects || []);
-      } catch (err) {
-        console.error("Failed to fetch projects:", err);
-      }
-    };
+  const fetchProjects = async () => {
+    try {
+      const response = await api.get("/api/project/getProjects", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setProjects(response.data.projects || []);
+    } catch (err) {
+      console.error("Failed to fetch projects:", err);
+    }
+  };
 
+  useEffect(() => {
     fetchProjects();
   }, []);
 
@@ -32,6 +33,16 @@ const ProjectsPage = () => {
       </div>
     );
   }
+
+  const handleDeleteProject = async (projectId) => {
+    await api.delete(`/api/project/deleteProjects/${projectId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    console.log("project deleted");
+    fetchProjects();
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 space-y-8 animate-background">
@@ -58,10 +69,7 @@ const ProjectsPage = () => {
             <ProjectCard
               key={project._id}
               project={project}
-              onView={(project) => {
-                console.log("View Project clicked:", project);
-                // Navigate to project details page or open modal here
-              }}
+              onDelete={() => handleDeleteProject(project._id)}
             />
           ))
         ) : (

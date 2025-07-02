@@ -18,5 +18,4 @@ projectRoutes.delete('/deleteProjects/:projectId', authMiddleware, checkPermissi
 projectRoutes.put('/updateProjects/:projectId/team', authMiddleware, checkPermission('update', 'Team'), updateTeam);
 
 
-
 module.exports = projectRoutes;
