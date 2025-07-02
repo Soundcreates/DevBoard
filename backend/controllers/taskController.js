@@ -19,7 +19,7 @@ module.exports.fetchTasksToUser = async (req, res) => {
 }
 module.exports.createTask = async (req, res) => {
   const { title, description, assignedTo, project, dueDate } = req.body;
-  console.log(req.body);
+  console.log("Recieved project ID:", project);
   try {
     if (!req.user || req.user.role !== 'pm') {
       return res.status(403).json({ message: "Access denied, only Pms can create a task" });

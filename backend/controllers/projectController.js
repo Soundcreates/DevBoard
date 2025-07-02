@@ -55,7 +55,7 @@ module.exports.getSpecificProject = async (req, res) => {
   const projectId = req.params.projectId;
 
   try {
-    const project = await projectModel.findById(projectId).populate('createdBy', 'name email').populate('teamMembers', 'name');
+    const project = await projectModel.findById(projectId).populate('createdBy', 'name email').populate('teamMembers', 'name profilePic');
 
     if (!project) return res.status(404).json({ message: "Project not found" });
 

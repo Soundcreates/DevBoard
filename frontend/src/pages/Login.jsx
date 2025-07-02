@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 
 const Login = () => {
-  const { setUser } = useAuth();
+  const { setUser, user, fetchUser } = useAuth();
 
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -31,6 +31,7 @@ const Login = () => {
       const response = await api.post("/api/auth/login", formData);
       localStorage.setItem("token", response.data.token);
       setUser(response.data.user);
+      fetchUser();
       navigate("/dashboard");
     } catch (err) {
       console.error("Login failed:", err);

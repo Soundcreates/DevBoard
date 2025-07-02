@@ -116,7 +116,7 @@ const ViewProject = () => {
                         className="flex items-center space-x-3 bg-white/10 rounded-lg p-2 hover:bg-white/20 transition"
                       >
                         <img
-                          src="https://via.placeholder.com/40"
+                          src={member.profilePic}
                           alt={member.name}
                           className="rounded-full w-10 h-10 border-2 border-white/20"
                         />
