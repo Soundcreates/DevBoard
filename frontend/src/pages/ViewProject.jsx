@@ -3,10 +3,12 @@ import { motion } from "framer-motion";
 import TaskCard from "../components/TaskCard";
 import AddTaskModal from "../components/AddTaskModal";
 import { useAuth } from "../globalState/authContext";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import api from "../services/api";
+import { ArrowLeft } from "lucide-react";
 
 const ViewProject = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [project, setProject] = useState(null);
   const { projectId } = useParams();
@@ -33,9 +35,19 @@ const ViewProject = () => {
     fetchProject();
   }, [projectId]);
 
+  const handleNavigation = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-6 animate-background">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="relative max-w-6xl mx-auto space-y-6">
+        <div
+          className="absolute right-5 top-5 cursor-pointer "
+          onClick={handleNavigation}
+        >
+          <ArrowLeft color="#ffffff" />
+        </div>
         {/* Header */}
         <div className="flex items-center space-x-4">
           <img
@@ -80,7 +92,7 @@ const ViewProject = () => {
                   <AddTaskModal
                     isOpen={modal}
                     onClose={() => setModal(false)}
-                    projectId={project._id}
+                    project={project}
                     developers={project.teamMembers || []}
                   />
                 )}

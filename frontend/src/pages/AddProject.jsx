@@ -3,6 +3,7 @@ import { useAuth } from "../globalState/authContext";
 import ProfileCard from "../components/ProfileCard";
 import { useNavigate } from "react-router";
 import api from "../services/api";
+import { ArrowLeft } from "lucide-react";
 
 const AddProject = () => {
   const navigate = useNavigate();
@@ -70,10 +71,19 @@ const AddProject = () => {
     }
   };
 
+  const handleNavigation = () => {
+    navigate(-1);
+  };
   return (
     <div className="flex min-h-screen">
       {/* Left Section */}
-      <div className="w-3/5 p-10 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white overflow-auto">
+      <div className="relative w-3/5 p-10 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white overflow-auto">
+        <div
+          className="absolute right-5 top-5 cursor-pointer "
+          onClick={handleNavigation}
+        >
+          <ArrowLeft color="#ffffff" />
+        </div>
         <h1 className="text-4xl font-bold mb-8">
           Hey {user?.name}, let's create a project
         </h1>

@@ -3,8 +3,11 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../globalState/authContext";
 import api from "../services/api";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const ProfileSettings = () => {
+  const navigate = useNavigate();
   const { user, fetchUser } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -53,14 +56,24 @@ const ProfileSettings = () => {
     }
   };
 
+  const handleNavigation = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 flex items-center justify-center p-6 animate-background">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 w-full max-w-md border border-white/20 flex flex-col items-center"
+        className="relaitve bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 w-full max-w-md border border-white/20 flex flex-col items-center"
       >
+        <div
+          className="absolute right-5 top-5 cursor-pointer "
+          onClick={handleNavigation}
+        >
+          <ArrowLeft color="#ffffff" />
+        </div>
         <h2 className="text-3xl font-bold text-white mb-4">Profile Settings</h2>
 
         <img

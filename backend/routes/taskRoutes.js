@@ -5,7 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const checkPermission = require('../middleware/checkPermission');
 const { createTask, fetchTasks, fetchSpecificTask, updateTask, deleteTask, assignTask, fetchTasksToUser } = require('../controllers/taskController');
 
-taskRoutes.post('/createTask', authMiddleware, checkPermission('create', 'Task'), createTask);
+taskRoutes.post('/createTask/:projectId', authMiddleware, checkPermission('create', 'Task'), createTask);
 
 taskRoutes.get('/fetchTasks/:projectId', authMiddleware, checkPermission('read', 'Task'), fetchTasks);
 

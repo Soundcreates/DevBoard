@@ -7,6 +7,7 @@ import { useProject } from "../globalState/projectContext";
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import ProjectCard from "../components/ProjectCard";
+import { ArrowLeft } from "lucide-react";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -55,14 +56,23 @@ const Profile = () => {
     );
   }
 
+  const handleNavigation = () => {
+    navigate(-1);
+  };
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 space-y-8 animate-background">
+    <div className="relative min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 space-y-8 animate-background">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl w-full max-w-2xl p-6 border border-white/30"
+        className=" relative bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl w-full max-w-2xl p-6 border border-white/30"
       >
+        <div
+          className="absolute right-5 top-5 cursor-pointer "
+          onClick={handleNavigation}
+        >
+          <ArrowLeft color="#ffffff" />
+        </div>
         <div className="flex items-center space-x-6">
           <img
             src={user?.profilePic}

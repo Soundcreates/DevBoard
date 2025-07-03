@@ -18,17 +18,21 @@ module.exports.fetchTasksToUser = async (req, res) => {
   }
 }
 module.exports.createTask = async (req, res) => {
-  const { title, description, assignedTo, project, dueDate } = req.body;
-  console.log("Recieved project ID:", project);
+  const { title, description, projectName, assignedTo, dueDate } = req.body;
+  const projectId = req.params.projectId;
+  console.log("Recieved project ID:", projectId);
   try {
-    if (!req.user || req.user.role !== 'pm') {
+    if (!req.user || req.user.role !== 'pm' || req.user.role !== 'admin') {
       return res.status(403).json({ message: "Access denied, only Pms can create a task" });
     }
 
-    const projectAssignedTo = await projectModel.findById(project)
-    if (!projectAssignedTo) {
+    const projectAvailable = await projectModel.findOne({ name: projectName });
+    if (!projectAvailable) {
       return res.status(404).json({ message: "Project not found" });
     }
+
+
+    const projectAssignedTo = await projectModel.findById(projectAvailable._id);
 
     if (!projectAssignedTo.teamMembers.includes(assignedTo)) {
       return res.status(400).json({ message: "User is not a team member of this project" });
