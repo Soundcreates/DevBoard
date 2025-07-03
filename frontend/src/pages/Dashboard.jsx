@@ -11,14 +11,15 @@ import {
 } from "lucide-react";
 import { useAuth } from "../globalState/authContext";
 import { useNavigate } from "react-router";
+import { useTheme } from "../globalState/themeContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { handleLogout, user } = useAuth(); // ✅ get user from auth context
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { darkMode, setDarkMode } = useTheme();
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+    setDarkMode(!darkMode);
     document.documentElement.classList.toggle("dark");
   };
 
@@ -68,7 +69,7 @@ const Dashboard = () => {
   return (
     <div
       className={`min-h-screen ${
-        isDarkMode
+        darkMode
           ? "bg-gray-900"
           : "bg-gradient-to-br from-purple-500 via-pink-500 to-red-500"
       } transition-colors duration-300`}
@@ -102,7 +103,7 @@ const Dashboard = () => {
               onClick={toggleDarkMode}
               className="p-2 rounded-full bg-white/10 hover:bg-white/20"
             >
-              {isDarkMode ? (
+              {darkMode ? (
                 <SunIcon className="w-6 h-6 text-white" />
               ) : (
                 <MoonIcon className="w-6 h-6 text-white" />

@@ -3,10 +3,11 @@ import { motion } from "framer-motion";
 import { useAuth } from "../globalState/authContext";
 import ProjectCard from "../components/ProjectCard";
 import api from "../services/api";
-import { Navigate } from "react-router";
+import { useTheme } from "../globalState/themeContext"; // using your darkMode context
 
 const ProjectsPage = () => {
   const { user, isLoading } = useAuth();
+  const { darkMode } = useTheme();
   const [projects, setProjects] = useState([]);
 
   const fetchProjects = async () => {
@@ -26,26 +27,42 @@ const ProjectsPage = () => {
     fetchProjects();
   }, []);
 
+  const handleDeleteProject = async (projectId) => {
+    try {
+      await api.delete(`/api/project/deleteProjects/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log("Project deleted");
+      fetchProjects();
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
-        <p className="text-white text-lg">Loading your projects...</p>
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          darkMode
+            ? "bg-neutral-900 text-white"
+            : "bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white"
+        }`}
+      >
+        <p className="text-lg">Loading your projects...</p>
       </div>
     );
   }
 
-  const handleDeleteProject = async (projectId) => {
-    await api.delete(`/api/project/deleteProjects/${projectId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    console.log("project deleted");
-    fetchProjects();
-  };
-
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 space-y-8 animate-background">
+    <div
+      className={`min-h-screen flex flex-col items-center p-8 space-y-8 animate-background ${
+        darkMode
+          ? "bg-neutral-900 text-white"
+          : "bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white"
+      }`}
+    >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -54,12 +71,12 @@ const ProjectsPage = () => {
         className="flex flex-col items-center"
       >
         <img
-          src={user?.profilePic}
+          src={user?.profilePic || "https://via.placeholder.com/150"}
           alt="Profile"
-          className="rounded-full w-28 h-28 border-4 border-white/30 shadow-lg"
+          className="rounded-full w-28 h-28 border-4 border-white/30 shadow-lg object-cover"
         />
-        <h1 className="text-4xl text-white font-bold mt-4">{user.name}</h1>
-        <p className="text-white/80 italic text-lg mt-1">{user.role}</p>
+        <h1 className="text-4xl font-bold mt-4">{user.name}</h1>
+        <p className="italic text-lg mt-1 text-white/80">{user.role}</p>
       </motion.div>
 
       {/* Projects Grid */}
@@ -73,7 +90,7 @@ const ProjectsPage = () => {
             />
           ))
         ) : (
-          <p className="text-white text-lg">
+          <p className="text-lg text-center">
             {user?.role === "admin" || user?.role === "pm"
               ? "No projects found. Start by creating one!"
               : "You have no projects assigned."}

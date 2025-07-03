@@ -13,28 +13,31 @@ import ViewProject from "./pages/ViewProject";
 import { ProjectProvider } from "./globalState/projectContext";
 import ProtectedRoutes from "./globalState/ProtectedRoutes";
 import ProfileSettings from "./pages/ProfileSetting";
+import { ThemeProvider } from "./globalState/themeContext";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <ProjectProvider>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/add-project" element={<AddProject />} />
-              <Route
-                path="/view-project/:projectId"
-                element={<ViewProject />}
-              />
-              <Route path="/profile-setting" element={<ProfileSettings />} />
-            </Route>
-          </Routes>
+          <ThemeProvider>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route element={<ProtectedRoutes />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/tasks" element={<Tasks />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/add-project" element={<AddProject />} />
+                <Route
+                  path="/view-project/:projectId"
+                  element={<ViewProject />}
+                />
+                <Route path="/profile-setting" element={<ProfileSettings />} />
+              </Route>
+            </Routes>
+          </ThemeProvider>
         </ProjectProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -4,15 +4,19 @@ import ProfileCard from "../components/ProfileCard";
 import { useNavigate } from "react-router";
 import api from "../services/api";
 import { ArrowLeft } from "lucide-react";
+import { useTheme } from "../globalState/themeContext"; // your darkMode context
 
 const AddProject = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { darkMode } = useTheme();
+
   const [devs, setDevs] = useState([]);
   const [selectedDevs, setSelectedDevs] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+
   useEffect(() => {
     const fetchDevelopers = async () => {
       try {
@@ -44,7 +48,6 @@ const AddProject = () => {
       setError("Please fill in all fields");
       return;
     }
-
     try {
       const response = await api.post(
         "/api/project/addProjects",
@@ -74,12 +77,19 @@ const AddProject = () => {
   const handleNavigation = () => {
     navigate(-1);
   };
+
   return (
     <div className="flex min-h-screen">
       {/* Left Section */}
-      <div className="relative w-3/5 p-10 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white overflow-auto">
+      <div
+        className={`relative w-3/5 p-10 overflow-auto ${
+          darkMode
+            ? "bg-neutral-900 text-white"
+            : "bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white"
+        }`}
+      >
         <div
-          className="absolute right-5 top-5 cursor-pointer "
+          className="absolute right-5 top-5 cursor-pointer"
           onClick={handleNavigation}
         >
           <ArrowLeft color="#ffffff" />
@@ -100,7 +110,11 @@ const AddProject = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter project title"
-              className="p-3 rounded-lg bg-white/20 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-white"
+              className={`p-3 rounded-lg placeholder-white/70 focus:outline-none focus:ring-2 ${
+                darkMode
+                  ? "bg-neutral-800 text-white focus:ring-white/40"
+                  : "bg-white/20 text-white focus:ring-white"
+              }`}
             />
           </div>
 
@@ -113,13 +127,21 @@ const AddProject = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows="5"
-              className="p-3 rounded-lg bg-white/20 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-white"
+              className={`p-3 rounded-lg placeholder-white/70 focus:outline-none focus:ring-2 ${
+                darkMode
+                  ? "bg-neutral-800 text-white focus:ring-white/40"
+                  : "bg-white/20 text-white focus:ring-white"
+              }`}
             ></textarea>
           </div>
 
           <button
             type="submit"
-            className="bg-white/20 hover:bg-white/30 transition text-white font-semibold py-3 rounded-lg"
+            className={`transition text-white font-semibold py-3 rounded-lg ${
+              darkMode
+                ? "bg-neutral-700 hover:bg-neutral-600"
+                : "bg-white/20 hover:bg-white/30"
+            }`}
           >
             Create Project
           </button>
@@ -144,7 +166,11 @@ const AddProject = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-2/5 p-10 bg-gray-900 text-white overflow-auto">
+      <div
+        className={`w-2/5 p-10 overflow-auto ${
+          darkMode ? "bg-neutral-800 text-white" : "bg-gray-900 text-white"
+        }`}
+      >
         <h2 className="text-2xl font-bold mb-6">Assign to:</h2>
         <p className="mb-4 text-white/80">Developers:</p>
         <div className="space-y-4">
@@ -158,4 +184,5 @@ const AddProject = () => {
     </div>
   );
 };
+
 export default AddProject;
