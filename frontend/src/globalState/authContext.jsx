@@ -12,18 +12,21 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await api.get("/api/auth/getMe", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
+      const token = localStorage.getItem("token");
+      const config = {
+        withCredentials: true, // Always send cookies for Google OAuth
+      };
+      if (token) {
+        config.headers = {
+          Authorization: `Bearer ${token}`,
+        };
+      }
+      const response = await api.get("/api/auth/getMe", config);
       setUser(response.data.currentUser);
       setIsLoading(false);
     } catch (err) {
       console.log(err.message);
       setUser(null);
-    } finally {
       setIsLoading(false);
     }
   };

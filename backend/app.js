@@ -7,7 +7,23 @@ const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const connectDB = require('./config/connectDB');
 const userRoutes = require('./routes/userRoutes');
+const session = require('express-session');
+const passport = require('passport');
+require('./config/passport');
+
+
 dotenv.config();
+//google auth section
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+//google auth section ends here, from this line is the basic setup of app.js
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({

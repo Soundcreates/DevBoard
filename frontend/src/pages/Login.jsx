@@ -43,6 +43,9 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    window.location.href = "http://localhost:5000/api/auth/google";
+  };
   return (
     <div
       className={`min-h-screen flex items-center justify-center ${
@@ -121,7 +124,7 @@ const Login = () => {
         <div className="flex justify-between items-center mb-6">
           <a
             href="/register"
-            className="text-white/80 hover:text-white text-sm transition"
+            className="bg-blue-500 p-2 rounded-md hover:bg-blue-700 text-white/80 hover:text-white text-sm transition"
           >
             Sign Up
           </a>
@@ -136,6 +139,17 @@ const Login = () => {
         >
           Login
         </motion.button>
+        <div
+          onClick={handleGoogleLogin}
+          className=" cursor-pointer hover:scale-105 w-ful mt-3 flex justify-center gap-3 items-center  bg-purple-600 dark:bg-purple-700 text-white font-bold py-3 rounded-xl transition hover:bg-purple-500 hover:shadow-xl"
+        >
+          <img
+            src="./googleicon.svg"
+            alt="googleicon"
+            className="w-[25px] h-[25px]"
+          />
+          <p>Sign in with google</p>
+        </div>
         <div className=" text-center">
           <p className="italic text-blue-500">{error}</p>
         </div>
