@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import ProfileCard from "./ProfileCard";
 import api from "../services/api";
+import axios from "axios";
 
 function AddTaskModal({ isOpen, onClose, project, developers }) {
   const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ function AddTaskModal({ isOpen, onClose, project, developers }) {
     description: "",
     assignedTo: "",
     dueDate: "",
-    projectName: project.title,
+    project: project,
   });
   const [error, setError] = useState("");
 
@@ -18,15 +19,14 @@ function AddTaskModal({ isOpen, onClose, project, developers }) {
     console.log("Submit button clicked");
     console.log(formData);
     try {
-      const projectId = project._id;
-      const response = await api.post(
-        `/api/task/createTask/${projectId}`,
+      const response = await axios.post(
+        `http://localhost:5000/api/task/createTask/${project._id}`,
         {
           title: formData.title,
           description: formData.description,
           assignedTo: formData.assignedTo,
           dueDate: formData.dueDate,
-          projectName: project.title,
+          project: formData.project,
         },
         {
           headers: {

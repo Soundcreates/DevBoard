@@ -6,7 +6,7 @@ function defineAbilitiesFor(role, userId = null) {
     can('manage', 'all');
     can('delete', 'Project');
     cannot('assign', 'Task');
-    cannot('create', 'Task');
+    can('create', 'Task');
   } else if (role === 'pm') {
     can('create', 'Project');
     can('read', 'Project');

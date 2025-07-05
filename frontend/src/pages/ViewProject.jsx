@@ -15,15 +15,23 @@ const ViewProject = () => {
   const [project, setProject] = useState(null);
   const { projectId } = useParams();
   const [modal, setModal] = useState(false);
-
-  const tasks = [
-    {
-      id: 1,
-      title: "Task 1",
-    },
-  ];
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await api.get(`/api/task/fetchTasks/${projectId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        console.log(response.data.tasks);
+        setTasks(response.data.tasks);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
     const fetchProject = async () => {
       try {
         const response = await api.get(
@@ -34,7 +42,7 @@ const ViewProject = () => {
             },
           }
         );
-        console.log(response.data.project);
+
         setProject(response.data.project);
       } catch (err) {
         console.log(err.message);
@@ -42,6 +50,7 @@ const ViewProject = () => {
     };
 
     fetchProject();
+    fetchTasks();
   }, [projectId]);
 
   const handleNavigation = () => {
@@ -116,9 +125,9 @@ const ViewProject = () => {
                   />
                 )}
 
-                {project.tasks && project.tasks.length > 0 ? (
+                {tasks && tasks.length > 0 ? (
                   <div className="mt-4 grid gap-4">
-                    {project.tasks.map((task) => (
+                    {tasks.map((task) => (
                       <TaskCard key={task._id} task={task} />
                     ))}
                   </div>

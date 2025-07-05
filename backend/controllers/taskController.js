@@ -17,33 +17,34 @@ module.exports.fetchTasksToUser = async (req, res) => {
     return res.status(500).json({ message: "Internal server error, please try again later" });
   }
 }
+
 module.exports.createTask = async (req, res) => {
-  const { title, description, projectName, assignedTo, dueDate } = req.body;
   const projectId = req.params.projectId;
-  console.log("Recieved project ID:", projectId);
+  const { title, description, project, assignedTo, dueDate } = req.body;
+  console.log('endpoint hit!')
   try {
-    if (!req.user || req.user.role !== 'pm' || req.user.role !== 'admin') {
-      return res.status(403).json({ message: "Access denied, only Pms can create a task" });
+    // Correct role check
+    if (!req.user || (req.user.role !== 'pm' && req.user.role !== 'admin')) {
+      return res.status(403).json({ message: "Access denied, only PMs or admins can create a task" });
+      console.log('access denied');
     }
 
-    const projectAvailable = await projectModel.findOne({ name: projectName });
-    if (!projectAvailable) {
-      return res.status(404).json({ message: "Project not found" });
+    // Correct model name
+    const projectAssignedTo = await projectModel.findOne({ _id: projectId })
+    if (!projectAssignedTo) {
+      return res.status(404).json({ message: "project id not valid" });
     }
-
-
-    const projectAssignedTo = await projectModel.findById(projectAvailable._id);
 
     if (!projectAssignedTo.teamMembers.includes(assignedTo)) {
       return res.status(400).json({ message: "User is not a team member of this project" });
-
     }
 
+    // Correct property name
     const task = await taskModel.create({
       title,
       description,
       assignedTo,
-      project,
+      project: projectId,
       createdBy: req.user.id,
       dueDate,
     });
@@ -57,17 +58,15 @@ module.exports.createTask = async (req, res) => {
 
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json({ message: "Internal server error again , please try again later" })
+    return res.status(500).json({ message: "Internal server error again , please try again later" });
   }
-
-
 }
 
 module.exports.fetchTasks = async (req, res) => {
   const projectId = req.params.projectId;
 
   try {
-    const task = await taskModel.find({ project: projectId }).populate('assignedTo', 'name role');
+    const task = await taskModel.find({ project: projectId }).populate('assignedTo', 'name role').populate('createdBy', 'name role');
     if (!task) return res.status(404).json({ message: "No task found" });
 
     return res.status(200).json({ tasks: task });
