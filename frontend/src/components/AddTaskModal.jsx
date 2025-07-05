@@ -4,7 +4,7 @@ import ProfileCard from "./ProfileCard";
 import api from "../services/api";
 import axios from "axios";
 
-function AddTaskModal({ isOpen, onClose, project, developers }) {
+function AddTaskModal({ refreshTasks, isOpen, onClose, project, developers }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -36,6 +36,8 @@ function AddTaskModal({ isOpen, onClose, project, developers }) {
       );
       console.log("THe Formdata is: ", formData);
       setError(response.data.message);
+      refreshTasks();
+      onClose();
     } catch (err) {
       console.log(err.messsage);
       setError(err.message);

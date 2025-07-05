@@ -66,7 +66,7 @@ module.exports.fetchTasks = async (req, res) => {
   const projectId = req.params.projectId;
 
   try {
-    const task = await taskModel.find({ project: projectId }).populate('assignedTo', 'name role').populate('createdBy', 'name role');
+    const task = await taskModel.find({ project: projectId }).populate('assignedTo', 'name role profilePic').populate('createdBy', 'name role');
     if (!task) return res.status(404).json({ message: "No task found" });
 
     return res.status(200).json({ tasks: task });
@@ -96,28 +96,32 @@ module.exports.fetchSpecificTask = async (req, res) => {
 module.exports.updateTask = async (req, res) => {
   const { title, description, assignedTo, status } = req.body;
   const taskId = req.params.taskId;
+
   try {
-    const task = await taskModel.findById(taskId).populate('assignedTo', 'name role').populate('createdBy', 'name role').populate('project', 'title');
+    const task = await taskModel.findById(taskId).populate('assignedTo', 'name role profilePic').populate('createdBy', 'name role').populate('project', 'title');
     if (!task) return res.status(404).json({ message: "No task found" });
-
-
 
     if (title) task.title = title;
     if (description) task.description = description;
-    if (assignedTo) task.assignedTo = assignedTo
+    if (assignedTo) task.assignedTo = assignedTo;
     if (status) task.status = status;
+
     await task.save();
+
+    return res.status(200).json({
+      message: "Task updated successfully",
+      task: task
+    });
 
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ message: "Internal server error again , please try again" });
   }
-
 }
 
 module.exports.deleteTask = async (req, res) => {
   const taskId = req.params.taskId;
-
+  console.log('delete endpoint hit');
   try {
     const task = await taskModel.findByIdAndDelete(taskId);
     if (!task) return res.status(404).json({ message: "Task not found or already deleted" });

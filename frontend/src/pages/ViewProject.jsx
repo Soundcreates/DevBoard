@@ -17,21 +17,21 @@ const ViewProject = () => {
   const [modal, setModal] = useState(false);
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await api.get(`/api/task/fetchTasks/${projectId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        console.log(response.data.tasks);
-        setTasks(response.data.tasks);
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
+  const fetchTasks = async () => {
+    try {
+      const response = await api.get(`/api/task/fetchTasks/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log(response.data.tasks);
+      setTasks(response.data.tasks);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
+  useEffect(() => {
     const fetchProject = async () => {
       try {
         const response = await api.get(
@@ -122,13 +122,18 @@ const ViewProject = () => {
                     onClose={() => setModal(false)}
                     project={project}
                     developers={project.teamMembers || []}
+                    refreshTasks={fetchTasks}
                   />
                 )}
 
                 {tasks && tasks.length > 0 ? (
                   <div className="mt-4 grid gap-4">
                     {tasks.map((task) => (
-                      <TaskCard key={task._id} task={task} />
+                      <TaskCard
+                        key={task._id}
+                        task={task}
+                        refreshTasks={fetchTasks}
+                      />
                     ))}
                   </div>
                 ) : (
