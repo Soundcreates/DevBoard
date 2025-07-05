@@ -74,85 +74,95 @@ const Login = () => {
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white/10 dark:bg-gray-800/80 backdrop-blur-lg p-8 sm:p-10 rounded-2xl shadow-2xl w-full max-w-md border border-white/30"
+        className="bg-white/10 dark:bg-gray-800/80 backdrop-blur-lg p-8 sm:p-10 rounded-2xl shadow-2xl w-[800px] border border-white/30  "
       >
         <h2 className="text-white text-3xl font-bold mb-6 text-center">
           Welcome Back
         </h2>
 
-        <div className="mb-4">
-          <label htmlFor="email" className="text-white block mb-1 font-medium">
-            Email
-          </label>
-          <motion.input
-            whileFocus={{ scale: 1.02 }}
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, email: e.target.value }))
-            }
-            className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
-            placeholder="Enter your email"
-            aria-required="true"
-            autoComplete="email"
-          />
+        <div className = "flex flex-1 gap-10 items-center">
+          <div className = "w-[40%] rounded-md flex items-center gap-2 relative">
+            <img src = "/loginImage.png" alt = "login image"  className = "object-cover rounded-md"/>
+            <div className = "absolute right-[-20px] h-[300px] border-2 border-white/30"></div>
+          </div>
+          <div className = "w-[50%]">
+            <div className="mb-4">
+              <label htmlFor="email" className="text-white block mb-1 font-medium">
+                Email
+              </label>
+              <motion.input
+                  whileFocus={{ scale: 1.02 }}
+                  type="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  }
+                  className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
+                  placeholder="Enter your email"
+                  aria-required="true"
+                  autoComplete="email"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label
+                  htmlFor="password"
+                  className="text-white block mb-1 font-medium"
+              >
+                Password
+              </label>
+              <motion.input
+                  whileFocus={{ scale: 1.02 }}
+                  type="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, password: e.target.value }))
+                  }
+                  className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
+                  placeholder="Enter your password"
+                  aria-required="true"
+                  autoComplete="current-password"
+              />
+            </div>
+
+            <div className="flex justify-between items-center mb-6">
+              <a
+                  href="/register"
+                  className="bg-blue-500 p-2 rounded-md hover:bg-blue-700 text-white/80 hover:text-white text-sm transition"
+              >
+                Sign Up
+              </a>
+            </div>
+
+            <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleSubmit}
+                className="w-full bg-purple-600 dark:bg-purple-700 text-white font-bold py-3 rounded-xl transition hover:bg-purple-500 hover:shadow-xl"
+                aria-label="Login"
+            >
+              Login
+            </motion.button>
+            <div
+                onClick={handleGoogleLogin}
+                className=" cursor-pointer hover:scale-105 w-ful mt-3 flex justify-center gap-3 items-center  bg-purple-600 dark:bg-purple-700 text-white font-bold py-3 rounded-xl transition hover:bg-purple-500 hover:shadow-xl"
+            >
+              <img
+                  src="./googleicon.svg"
+                  alt="googleicon"
+                  className="w-[25px] h-[25px]"
+              />
+              <p>Sign in with google</p>
+            </div>
+            <div className=" text-center">
+              <p className="italic text-blue-500">{error}</p>
+            </div>
+          </div>
         </div>
 
-        <div className="mb-6">
-          <label
-            htmlFor="password"
-            className="text-white block mb-1 font-medium"
-          >
-            Password
-          </label>
-          <motion.input
-            whileFocus={{ scale: 1.02 }}
-            type="password"
-            id="password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, password: e.target.value }))
-            }
-            className="w-full px-4 py-2 rounded-xl bg-white/20 dark:bg-gray-700/50 border border-white/20 focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-white/80 transition hover:shadow-lg"
-            placeholder="Enter your password"
-            aria-required="true"
-            autoComplete="current-password"
-          />
-        </div>
 
-        <div className="flex justify-between items-center mb-6">
-          <a
-            href="/register"
-            className="bg-blue-500 p-2 rounded-md hover:bg-blue-700 text-white/80 hover:text-white text-sm transition"
-          >
-            Sign Up
-          </a>
-        </div>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleSubmit}
-          className="w-full bg-purple-600 dark:bg-purple-700 text-white font-bold py-3 rounded-xl transition hover:bg-purple-500 hover:shadow-xl"
-          aria-label="Login"
-        >
-          Login
-        </motion.button>
-        <div
-          onClick={handleGoogleLogin}
-          className=" cursor-pointer hover:scale-105 w-ful mt-3 flex justify-center gap-3 items-center  bg-purple-600 dark:bg-purple-700 text-white font-bold py-3 rounded-xl transition hover:bg-purple-500 hover:shadow-xl"
-        >
-          <img
-            src="./googleicon.svg"
-            alt="googleicon"
-            className="w-[25px] h-[25px]"
-          />
-          <p>Sign in with google</p>
-        </div>
-        <div className=" text-center">
-          <p className="italic text-blue-500">{error}</p>
-        </div>
       </motion.div>
     </div>
   );
