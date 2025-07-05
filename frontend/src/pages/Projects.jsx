@@ -4,12 +4,14 @@ import { useAuth } from "../globalState/authContext";
 import ProjectCard from "../components/ProjectCard";
 import api from "../services/api";
 import { useTheme } from "../globalState/themeContext"; // using your darkMode context
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const ProjectsPage = () => {
   const { user, isLoading } = useAuth();
   const { darkMode } = useTheme();
   const [projects, setProjects] = useState([]);
-
+  const navigate = useNavigate();
   const fetchProjects = async () => {
     try {
       const response = await api.get("/api/project/getProjects", {
@@ -55,6 +57,10 @@ const ProjectsPage = () => {
     );
   }
 
+  function handleNavigation() {
+    navigate(-1);
+  }
+
   return (
     <div
       className={`min-h-screen flex flex-col items-center p-8 space-y-8 animate-background ${
@@ -63,6 +69,12 @@ const ProjectsPage = () => {
           : "bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white"
       }`}
     >
+      <div
+        className="absolute right-5 top-5 cursor-pointer"
+        onClick={handleNavigation}
+      >
+        <ArrowLeft color="#ffffff" />
+      </div>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

@@ -16,6 +16,13 @@ const ViewProject = () => {
   const { projectId } = useParams();
   const [modal, setModal] = useState(false);
 
+  const tasks = [
+    {
+      id: 1,
+      title: "Task 1",
+    },
+  ];
+
   useEffect(() => {
     const fetchProject = async () => {
       try {
