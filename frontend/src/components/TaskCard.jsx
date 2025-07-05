@@ -72,12 +72,15 @@ const TaskCard = ({ task, refreshTasks }) => {
             autoFocus
           />
         ) : (
-          <h3 className="text-lg font-semibold">{task.title}</h3>
+
+
+              <h3 className="text-lg font-semibold">{task.title}</h3>
+
         )}
         <div className="w-10 h-10 rounded-full border-2 border-white">
           <img
             className="rounded-full object-cover w-full h-full"
-            src={task.assignedTo.profilePic}
+            src={task.createdBy.profilePic}
             alt="developer profilepic"
           />
         </div>

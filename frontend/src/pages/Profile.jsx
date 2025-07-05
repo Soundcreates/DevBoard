@@ -8,6 +8,7 @@ import ProjectCard from "../components/ProjectCard";
 import { ArrowLeft } from "lucide-react";
 import api from "../services/api";
 import { useTheme } from "../globalState/themeContext"; // assuming your darkMode context is here
+import TaskCard from "../components/TaskCard.jsx";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -165,7 +166,9 @@ const Profile = () => {
             </p>
           ) : (
             // Insert your <TaskCard /> list here once ready
-            <p className="text-lg italic">Tasks will display here.</p>
+              countTasks.map(task => (
+                  <TaskCard key = {task._id} task = {task} />
+                ))
           )}
         </div>
       )}
