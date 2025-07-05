@@ -81,7 +81,7 @@ const TaskCard = ({ task, refreshTasks }) => {
           <img
             className="rounded-full object-cover w-full h-full"
             src={task.createdBy.profilePic}
-            alt="developer profilepic"
+            alt="author profilepic"
           />
         </div>
       </div>
@@ -101,9 +101,9 @@ const TaskCard = ({ task, refreshTasks }) => {
           <span className="font-medium">Created By:</span> {task.createdBy.name}{" "}
           ({task.createdBy.role})
         </p>
-        <p>
+        <p className ="flex items-center ">
           <span className="font-medium">Assigned To:</span>{" "}
-          {task.assignedTo.name} ({task.assignedTo.role})
+          {task.assignedTo.name} ({task.assignedTo.role}) <span className  = 'ml-2 rounded-full w-8 h-8 border-2 border-white'><img src = {task.assignedTo.profilePic} alt = "developer assigned profile pic" className = "rounded-full object-coverw-full h-full "/> </span>
         </p>
         <p>
           <span className="font-medium">Status:</span> {task.status}

@@ -14,6 +14,8 @@ import { ProjectProvider } from "./globalState/projectContext";
 import ProtectedRoutes from "./globalState/ProtectedRoutes";
 import ProfileSettings from "./pages/ProfileSetting";
 import { ThemeProvider } from "./globalState/themeContext";
+import TaskBoard from "./pages/TaskBoard.jsx";
+import {TaskProvider} from "./globalState/taskContext.jsx";
 
 function App() {
   return (
@@ -21,22 +23,26 @@ function App() {
       <AuthProvider>
         <ProjectProvider>
           <ThemeProvider>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route element={<ProtectedRoutes />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/tasks" element={<Tasks />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/add-project" element={<AddProject />} />
-                <Route
-                  path="/view-project/:projectId"
-                  element={<ViewProject />}
-                />
-                <Route path="/profile-setting" element={<ProfileSettings />} />
-              </Route>
-            </Routes>
+            <TaskProvider>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route element={<ProtectedRoutes />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/tasks" element={<Tasks />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/add-project" element={<AddProject />} />
+                  <Route
+                      path="/view-project/:projectId"
+                      element={<ViewProject />}
+                  />
+                  <Route path="/profile-setting" element={<ProfileSettings />} />
+                  <Route path = "/task-board/:projectId" element = {<TaskBoard />} />
+                </Route>
+              </Routes>
+            </TaskProvider>
+
           </ThemeProvider>
         </ProjectProvider>
       </AuthProvider>
