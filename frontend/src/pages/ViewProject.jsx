@@ -17,6 +17,7 @@ const ViewProject = () => {
   const [modal, setModal] = useState(false);
   const [tasks, setTasks] = useState([]);
 
+
   const fetchTasks = async () => {
     try {
       const response = await api.get(`/api/task/fetchTasks/${projectId}`, {
@@ -57,6 +58,9 @@ const ViewProject = () => {
     navigate(-1);
   };
 
+  const handleNavigateTaskBoard = () => {
+    navigate(`/task-board/${project._id}`)
+  }
   return (
     <div
       className={`min-h-screen p-6 animate-background ${
@@ -107,14 +111,20 @@ const ViewProject = () => {
               >
                 <h2 className="text-2xl font-bold">{project.title}</h2>
                 <p className="text-white/80 mt-1">{project.description}</p>
-                {(user?.role === "admin" || user?.role === "pm") && (
-                  <div
-                    className="bg-blue-500 text-white text-center w-[90px] py-2 rounded-lg mt-4 cursor-pointer hover:bg-blue-700 transition-all duration-300"
-                    onClick={() => setModal(true)}
-                  >
-                    Add Task
+                <div className = "flex items-center gap-3">
+                  {(user?.role === "admin" || user?.role === "pm") && (
+                      <div
+                          className="bg-blue-500 text-white text-center w-[90px] py-2 rounded-lg mt-4 cursor-pointer hover:bg-blue-700 transition-all duration-300"
+                          onClick={() => setModal(true)}
+                      >
+                        Add Task
+                      </div>
+                  )}
+                  <div onClick = {handleNavigateTaskBoard} className = "bg-green-600 text-white text-center w-[90px] py-2 rounded-lg mt-4 cursor-pointer hover:bg-green-800 transition-all duration-300">
+                    Task Board
                   </div>
-                )}
+                </div>
+
 
                 {modal && (
                   <AddTaskModal

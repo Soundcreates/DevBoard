@@ -4,8 +4,9 @@ const taskModel = require('../models/taskModel');
 
 module.exports.fetchTasksToUser = async (req, res) => {
   const userId = req.user.id;
+
   try {
-    const tasks = await taskModel.find({ assignedTo: userId }).populate('assignedTo', 'name role').populate('createdBy', 'name role').populate('project', 'title');
+    const tasks = await taskModel.find({ assignedTo: userId }).populate('assignedTo', 'name role profilePic ').populate('createdBy', 'name role profilePic').populate('project', 'title');
 
     if (!tasks || tasks.length === 0) {
       return res.status(404).json({ message: "No tasks found for this user" });
@@ -66,7 +67,7 @@ module.exports.fetchTasks = async (req, res) => {
   const projectId = req.params.projectId;
 
   try {
-    const task = await taskModel.find({ project: projectId }).populate('assignedTo', 'name role profilePic').populate('createdBy', 'name role');
+    const task = await taskModel.find({ project: projectId }).populate('assignedTo', 'name role profilePic').populate('createdBy', 'name role profilePic');
     if (!task) return res.status(404).json({ message: "No task found" });
 
     return res.status(200).json({ tasks: task });
