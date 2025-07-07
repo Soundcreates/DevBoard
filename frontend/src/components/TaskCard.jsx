@@ -23,11 +23,11 @@ const TaskCard = ({ task, refreshTasks }) => {
       console.log(err.message);
     }
   }
-
+  //gona use intellij for some days to like get the feel, kinda like it lowk
   const handleEditClick = () => {
     setIsEditing(true);
   };
-
+  //this just feels better like mine
   const handleSaveEdit = async () => {
     try {
       const response = await api.put(
